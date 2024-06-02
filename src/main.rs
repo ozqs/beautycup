@@ -4,6 +4,8 @@ use rocket::{
     tokio::fs,
 };
 
+use rocket::response::content;
+
 #[macro_use]
 extern crate rocket;
 
@@ -77,9 +79,9 @@ function sendmessssage(g) {
     };
 }
 </script>
-<button onclick='sendmessssage(\"./##A/##B\")'>##A</button>
-<button onclick='sendmessssage(\"./##B/##A\")'>##B</button>
-<button onclick='sendmessssage(\"./back\")'>back</button>";
+<button onclick='sendmessssage(window.location.href + \"/##A/##B\")'>##A</button>
+<button onclick='sendmessssage(window.location.href + \"/##B/##A\")'>##B</button>
+<button onclick='sendmessssage(window.location.href + \"/back\")'>back</button>";
 
 static mut ORDER: [[bool; 29]; 29] = [[false; 29]; 29];
 static mut BREAK: bool = false;
@@ -143,7 +145,7 @@ fn merge_two_arrays(arr: &mut [i32], lo: usize, mid: usize, hi: usize) {
 }
 
 #[get("/<token>")]
-fn page(token: &str) -> String {
+fn page(token: &str) -> content::RawHtml<String> {
     let mut user = 998244353;
     for i in 0..(TOKENS.len() - 1) {
         if TOKENS[i] == token {
@@ -151,15 +153,19 @@ fn page(token: &str) -> String {
         }
     }
     if user == 998244353 {
-        "permission died.".to_string()
+        content::RawHtml("permission died.".to_string())
     } else {
         let (x, y) = get_next_problem(user as i32);
         if x == -1 {
-            std::fs::read_to_string(format!("{user}list.txt")).unwrap_or("".to_string())
+            content::RawHtml(
+                std::fs::read_to_string(format!("{user}list.txt")).unwrap_or("".to_string()),
+            )
         } else {
             let res = String::from(TEMPLATE);
-            res.replace("##A", NAMES[x as usize])
-                .replace("##B", NAMES[y as usize])
+            content::RawHtml(
+                res.replace("##A", NAMES[x as usize])
+                    .replace("##B", NAMES[y as usize]),
+            )
         }
     }
 }

@@ -1,0 +1,14 @@
+<script>
+    function sendmessssage(g) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open('GET', g, true);
+        httpRequest.send();
+
+        httpRequest.onreadystatechange = function () {
+            location.reload();
+        };
+    }
+</script>
+<button onclick='sendmessssage("./##A/##B")'>##A</button>
+<button onclick='sendmessssage("./##B/##A")'>##B</button>
+<button onclick='sendmessssage("./back")'>back</button>

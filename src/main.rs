@@ -196,6 +196,9 @@ fn get_next_problem(user: i32) -> (i32, i32) {
                 23, 24, 25, 26, 27, 28,
             ];
 
+            LEFT = -1;
+            RIGHT = -1;
+
             merge_sort(&mut arr);
 
             (LEFT, RIGHT)
